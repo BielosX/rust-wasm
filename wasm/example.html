@@ -1,17 +1,33 @@
 <html lang="en">
     <script src="example.js"></script>
     <body>
-        <form>
+        <div>
+            <b>Add Numbers</b>
+            <br>
+            <form>
+                <label>
+                    First:
+                    <input id="first" type="text">
+                </label>
+                <label>
+                    Second:
+                    <input id="second" type="text">
+                </label>
+            </form>
+            <p id="result">0</p>
+            <button onclick=addNumbersHandler()>Add</button>
+        </div>
+        <br>
+        <br>
+        <div>
+            <b>String to Upper Case</b>
+            <br>
             <label>
-                First:
-                <input id="first" type="text">
+                String to convert:
+                <textarea id="to-upper-text-area"></textarea>
             </label>
-            <label>
-                Second:
-                <input id="second" type="text">
-            </label>
-        </form>
-        <p id="result">0</p>
-        <button onclick=clickHandler()>Add</button>
+            <p id="to-upper-result"></p>
+            <button onclick=toUpperCase()>To Upper</button>
+        </div>
     </body>
 </html>
