@@ -1,0 +1,6 @@
+build:
+    mkdir -p out
+    wat2wasm example.wat -o out/example.wasm
+
+clean:
+    rm -rf out
