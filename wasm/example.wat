@@ -9,6 +9,7 @@
     (func $toUpper (param $offset i32) (param $length i32)
         (local $counter i32)
         (local $address i32)
+        (local $char i32)
         (local.set $counter (i32.const 0))
         (local.set $address (i32.const 0))
         (loop $func_loop
@@ -20,19 +21,18 @@
             (block $character
                 local.get $address
                 i32.load8_u
+                local.tee $char
                 i32.const 0x61
                 i32.lt_u
                 br_if $character
 
-                local.get $address
-                i32.load8_u
+                local.get $char
                 i32.const 0x7A
                 i32.gt_u
                 br_if $character
 
                 local.get $address
-                local.get $address
-                i32.load8_u
+                local.get $char
                 i32.const 0xDF
                 i32.and
                 i32.store8
