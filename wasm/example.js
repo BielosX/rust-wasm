@@ -30,6 +30,15 @@ function toUpperCase() {
     wasm.then((obj) => {
         const textDecoder = new TextDecoder("utf-8");
         obj.instance.exports.toUpper(0, textToConvert.length);
-        result.innerText = textDecoder.decode(memory.buffer);
-    })
+        const slice = memory.buffer.slice(0, 2000);
+        result.innerText = textDecoder.decode(slice);
+    });
+}
+
+function handleCounter() {
+    const result = document.getElementById("counter-result");
+    wasm.then((obj) => {
+        obj.instance.exports.incCounter();
+        result.innerText = obj.instance.exports.getCounter();
+    });
 }

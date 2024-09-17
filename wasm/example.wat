@@ -1,5 +1,16 @@
 (module
     (import "js" "memory" (memory 1))
+    (global $counter (mut i32) (i32.const 0))
+    (data (i32.const 2000) "Hello World")
+    (func (export "getCounter") (result i32)
+        global.get $counter
+    )
+    (func (export "incCounter")
+        global.get $counter
+        i32.const 1
+        i32.add
+        global.set $counter
+    )
     (func $add (param $lhs i32) (param $rhs i32) (result i32)
         local.get $lhs
         local.get $rhs
