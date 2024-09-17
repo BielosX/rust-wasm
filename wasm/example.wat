@@ -2,6 +2,18 @@
     (import "js" "memory" (memory 1))
     (global $counter (mut i32) (i32.const 0))
     (data (i32.const 2000) "Hello World")
+    (func (export "copyStringTo") (param $offset i32)
+        local.get $offset
+        i32.const 2000 ;; Hello World address
+        i32.const 11 ;; Hello World length
+        memory.copy
+    )
+    (func (export "memset") (param $offset i32) (param $value i32) (param $bytes i32)
+        local.get $offset
+        local.get $value
+        local.get $bytes
+        memory.fill
+    )
     (func (export "getCounter") (result i32)
         global.get $counter
     )

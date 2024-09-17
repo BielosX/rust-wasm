@@ -11,6 +11,12 @@ importObject = {
 const wasm = WebAssembly.instantiateStreaming(fetch("out/example.wasm"),
     importObject);
 
+function getTextFromMemory(from, to) {
+    const textDecoder = new TextDecoder("utf-8");
+    const slice = memory.buffer.slice(from, to);
+    return textDecoder.decode(slice);
+}
+
 function addNumbersHandler() {
     const result = document.getElementById("result");
     const first = parseInt(document.getElementById("first").value);
@@ -28,10 +34,8 @@ function toUpperCase() {
         dataView.setUint8(i, textToConvert.charCodeAt(i));
     }
     wasm.then((obj) => {
-        const textDecoder = new TextDecoder("utf-8");
         obj.instance.exports.toUpper(0, textToConvert.length);
-        const slice = memory.buffer.slice(0, 2000);
-        result.innerText = textDecoder.decode(slice);
+        result.innerText = getTextFromMemory(0, 2000);
     });
 }
 
@@ -40,5 +44,23 @@ function handleCounter() {
     wasm.then((obj) => {
         obj.instance.exports.incCounter();
         result.innerText = obj.instance.exports.getCounter();
+    });
+}
+
+
+
+function handleCopyText() {
+    const result = document.getElementById("copy-text-result");
+    wasm.then((obj) => {
+        obj.instance.exports.copyStringTo(4000);
+        result.innerText = getTextFromMemory(4000, 4050);
+    });
+}
+
+function handleCleanText() {
+    const result = document.getElementById("copy-text-result");
+    wasm.then((obj) => {
+        obj.instance.exports.memset(4000, 0, 50);
+        result.innerText = getTextFromMemory(4000, 4050);
     });
 }
