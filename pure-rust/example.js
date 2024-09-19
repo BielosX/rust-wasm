@@ -39,3 +39,23 @@ function toLowerCase() {
         result.innerText = getTextFromMemory(offset, offset + 100);
     });
 }
+
+function concatUserName() {
+    const firstName = document.getElementById("first-name").value;
+    const lastName = document.getElementById("last-name").value;
+    const result = document.getElementById("concat-user-name");
+    const json = JSON.stringify({
+        firstName,
+        lastName,
+    });
+    const dataView = new DataView(memory.buffer);
+    const offset = 15000;
+    for (let i = 0; i < json.length; i++) {
+        dataView.setUint8(offset + i, json.charCodeAt(i));
+    }
+    wasm.then((obj) => {
+        [from, to] = obj.instance.exports.user_stringify(offset, json.length);
+        console.log(`from ${from} to ${to}`);
+        result.innerText = getTextFromMemory(from, to);
+    });
+}

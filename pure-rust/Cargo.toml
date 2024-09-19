@@ -7,3 +7,5 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
