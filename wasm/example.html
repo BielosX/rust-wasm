@@ -1,5 +1,4 @@
 <html lang="en">
-    <script src="example.js"></script>
     <body>
         <div>
             <b>Add Numbers</b>
@@ -46,5 +45,42 @@
             <button onclick=handleCopyText()>Copy</button>
             <button onclick=handleCleanText()>Clean</button>
         </div>
+        <br>
+        <br>
+        <div>
+
+            <b>Calculator</b>
+            <br>
+            <form id="calculator-form">
+                <label>
+                    First:
+                    <input name="first" type="text">
+                </label>
+                <br>
+                <label>
+                    Second:
+                    <input name="second" type="text">
+                </label>
+                <br>
+                <label>
+                    <input type="radio" name="calc-function" value="add">
+                    Add
+                </label>
+                <br>
+                <label>
+                    <input type="radio" name="calc-function" value="sub">
+                    Substitute
+                </label>
+                <br>
+                <label>
+                    <input type="radio" name="calc-function" value="mul">
+                    Multiply
+                </label>
+                <br>
+                <button type="submit">Calculate</button>
+            </form>
+            <p id="calc-result">0</p>
+        </div>
     </body>
+    <script src="example.js"></script>
 </html>

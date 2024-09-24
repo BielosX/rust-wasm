@@ -1,10 +1,15 @@
 memory = new WebAssembly.Memory({
     initial: 10,
     maximum: 100,
-})
+});
+table = new WebAssembly.Table({
+    element: "anyfunc",
+    initial: 4,
+});
 importObject = {
     js: {
-        memory
+        memory,
+        table,
     },
 };
 
@@ -64,3 +69,31 @@ function handleCleanText() {
         result.innerText = getTextFromMemory(4000, 4050);
     });
 }
+
+const form = document.getElementById("calculator-form");
+form.addEventListener("submit", (event) => {
+    const data = new FormData(form);
+    const first = parseInt(data.get("first"));
+    const second = parseInt(data.get("second"));
+    const calcFunction = data.get("calc-function");
+    const calcResult = document.getElementById("calc-result");
+    wasm.then((obj) => {
+        const calculate = obj.instance.exports.calculate;
+        let result;
+        switch(calcFunction) {
+            case "add":
+                result = calculate(0, first, second);
+                break;
+            case "sub":
+                result = calculate(1, first, second);
+                break;
+            case "mul":
+                result = calculate(2, first, second);
+                break;
+            default:
+                result = "";
+        }
+        calcResult.innerText = result;
+    });
+    event.preventDefault();
+});

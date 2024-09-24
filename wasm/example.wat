@@ -1,7 +1,9 @@
 (module
+    (import "js" "table" (table 4 funcref))
     (import "js" "memory" (memory 1))
     (global $counter (mut i32) (i32.const 0))
     (data (i32.const 2000) "Hello World")
+    (elem (i32.const 0) $add $sub $mul)
     (func (export "copyStringTo") (param $offset i32)
         local.get $offset
         i32.const 2000 ;; Hello World address
@@ -29,6 +31,51 @@
         ;; The return value of a function is just the final value left on the stack.
         i32.add)
     (export "add" (func $add))
+    (func $sub (param $lhs i32) (param $rhs i32) (result i32)
+        local.get $lhs
+        local.get $rhs
+        i32.sub
+    )
+    (func $mul (param $lhs i32) (param $rhs i32) (result i32)
+        local.get $lhs
+        local.get $rhs
+        i32.mul
+    )
+    (type $calculate_value (func (param i32) (param i32) (result i32)))
+    (func $calculate (param $index i32) (param $lhs i32) (param $rhs i32) (result i32)
+        local.get $lhs
+        local.get $rhs
+        local.get $index
+        call_indirect (type $calculate_value)
+    )
+    (export "calculate" (func $calculate))
+    (func $isLetter (param $arg i32) (result i32)
+        (local $result i32)
+        (local.set $result (i32.const 0))
+        (block $checkIfLetter
+            local.get $arg
+            i32.const 0x41
+            i32.lt_u
+            br_if $checkIfLetter
+
+            local.get $arg
+            i32.const 0x7A
+            i32.gt_u
+            br_if $checkIfLetter
+
+            local.get $arg
+            i32.const 0x5A
+            i32.gt_u
+            local.get $arg
+            i32.const 0x61
+            i32.lt_u
+            i32.and
+            br_if $checkIfLetter
+
+            (local.set $result (i32.const 1))
+        )
+        local.get $result
+    )
     (func $toUpper (param $offset i32) (param $length i32)
         (local $counter i32)
         (local $address i32)
@@ -41,18 +88,14 @@
             i32.add
             local.set $address
 
-            (block $character
+            (block $charToUpper
                 local.get $address
                 i32.load8_u
-                local.tee $char
-                i32.const 0x61
-                i32.lt_u
-                br_if $character
-
-                local.get $char
-                i32.const 0x7A
-                i32.gt_u
-                br_if $character
+                local.tee $char ;; Loaded value stored in $char and kept on stack
+                call $isLetter
+                i32.const 0x01
+                i32.xor
+                br_if $charToUpper
 
                 local.get $address
                 local.get $char
