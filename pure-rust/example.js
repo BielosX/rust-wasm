@@ -8,6 +8,10 @@ function getTextFromMemory(obj, from, to) {
     return textDecoder.decode(slice);
 }
 
+function memoryDataView(obj) {
+    return new DataView(obj.instance.exports.memory.buffer);
+}
+
 function addNumbersHandler() {
     const firstNumber = parseInt(document.getElementById("first-number").value);
     const secondNumber = parseInt(document.getElementById("second-number").value);
@@ -21,7 +25,7 @@ function toLowerCase() {
     const textToConvert = document.getElementById("to-lower-text-area").value;
     const result = document.getElementById("to-lower-result");
     wasm.then((obj) => {
-        const dataView = new DataView(obj.instance.exports.memory.buffer);
+        const dataView = memoryDataView(obj);
         const offset = 10000;
         for (let i = 0; i < textToConvert.length; i++) {
             dataView.setUint8(i + offset, textToConvert.charCodeAt(i));
@@ -40,7 +44,7 @@ function concatUserName() {
         lastName,
     });
     wasm.then((obj) => {
-        const dataView = new DataView(obj.instance.exports.memory.buffer);
+        const dataView = memoryDataView(obj);
         const offset = 15000;
         for (let i = 0; i < json.length; i++) {
             dataView.setUint8(offset + i, json.charCodeAt(i));
