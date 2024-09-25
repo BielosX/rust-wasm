@@ -1,0 +1,8 @@
+build:
+    wasm-pack build --target web --no-typescript
+
+test:
+    wasm-pack test --firefox --headless
+
+clean:
+    rm -rf {{ justfile_directory() }}/pkg
