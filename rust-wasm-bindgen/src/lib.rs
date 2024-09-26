@@ -1,5 +1,6 @@
 mod utils;
 
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use web_sys::wasm_bindgen::JsCast;
 use web_sys::{Document, FormData, HtmlFormElement, SubmitEvent};
@@ -64,7 +65,11 @@ unsafe fn describe_animals() -> String {
     result
 }
 
-unsafe fn handle_submit_event(document: &Document, html_element: &HtmlFormElement, event: SubmitEvent) {
+unsafe fn handle_submit_event(
+    document: &Document,
+    html_element: &HtmlFormElement,
+    event: SubmitEvent,
+) {
     let form_data = FormData::new_with_form(html_element).unwrap();
     let name = form_data.get("animal-name").as_string().unwrap();
     let age = form_data.get("animal-age").as_string().unwrap();
@@ -106,4 +111,26 @@ pub fn init() {
 #[wasm_bindgen]
 pub fn greet() {
     log("Hello, wasm-bindgen!");
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Person {
+    age: u32,
+    country: String,
+    name: String,
+}
+
+/*
+   https://rustwasm.github.io/wasm-bindgen/contributing/design/js-objects-in-rust.html
+   One of the main goals of wasm-bindgen is to allow working with and passing around JS objects in wasm,
+   but that's not allowed today!
+*/
+#[wasm_bindgen]
+pub fn describe_person(person: &str) -> String {
+    log(person);
+    let decoded: Person = serde_json::from_str(person).expect("Person expected");
+    format!(
+        "Hello, my name is {}, i'm {} years old and i'm from {}",
+        decoded.name, decoded.age, decoded.country
+    )
 }
