@@ -1,5 +1,6 @@
-import init, {greet} from './pkg/rust_wasm_bindgen.js';
+import init_wasm, {greet, init} from './pkg/rust_wasm_bindgen.js';
 
-init().then(() => {
+init_wasm().then(() => {
+    init();
     greet();
 });
