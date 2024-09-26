@@ -1,0 +1,27 @@
+<html lang="en">
+    <style>
+        .multiline {
+            white-space: pre-wrap;
+        }
+    </style>
+    <script src="index.js"></script>
+    <body>
+        <p>Circle</p>
+        <form>
+            <label>
+                Radius
+                <input id="circle-radius" type="text">
+            </label>
+            <button type="button" onclick=addCircle()>Add</button>
+        </form>
+        <p>Rectangle</p>
+        <form>
+            <label>
+                Edge
+                <input id="rectangle-edge" type="text">
+            </label>
+            <button type="button" onclick=addRectangle()>Add</button>
+        </form>
+        <p class="multiline" id="figure-areas">Result</p>
+    </body>
+</html>
