@@ -1,6 +1,40 @@
 <html lang="en">
+    <style>
+        .multiline {
+            white-space: pre-wrap;
+        }
+    </style>
     <body>
-
+        <div>
+            <p>Animal Form</p>
+            <form id="animal-form">
+                <label>
+                    Name
+                    <input type="text" name="animal-name">
+                </label>
+                <br>
+                <label>
+                    Age
+                    <input type="text" name="animal-age">
+                </label>
+                <br>
+                <label>
+                    <input name="animal-type" value="cat" type="radio">
+                    Cat
+                </label>
+                <br>
+                <label>
+                    <input name="animal-type" value="dog" type="radio">
+                    Dog
+                </label>
+                <br>
+                <button type="submit">Add</button>
+            </form>
+            <p id="animal-count">Count</p>
+            <div class="multiline">
+                <p id="animal-speak">Items</p>
+            </div>
+        </div>
     </body>
     <script type="module" src="index.js"></script>
 </html>
