@@ -31,6 +31,12 @@ impl Speak for Dog {
     }
 }
 
+/*
+    https://doc.rust-lang.org/std/keyword.dyn.html
+
+    A dyn Trait reference contains two pointers. One pointer goes to the data (e.g., an instance of a struct).
+    Another pointer goes to a map of method call names to function pointers (known as a virtual method table or vtable).
+ */
 static mut ANIMALS: Vec<Box<dyn Speak>> = Vec::new();
 
 #[wasm_bindgen]
