@@ -1,5 +1,6 @@
 mod utils;
 
+use std::mem;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use web_sys::wasm_bindgen::JsCast;
@@ -70,6 +71,8 @@ unsafe fn describe_animals() -> String {
     ANIMALS
         .iter()
         .for_each(|item| {
+            let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const usize)>(item);
+            log(format!("pointer: {}, vtable: {}", pointer as u32, vtable as u32).as_str());
             result.push_str(item.speak().as_str())
         });
     result
