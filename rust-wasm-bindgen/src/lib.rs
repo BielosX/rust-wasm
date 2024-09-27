@@ -36,6 +36,8 @@ impl Speak for Dog {
 
     A dyn Trait reference contains two pointers. One pointer goes to the data (e.g., an instance of a struct).
     Another pointer goes to a map of method call names to function pointers (known as a virtual method table or vtable).
+
+    Box<dyn T> is essentially equivalent to (*mut {data}, *mut {vtable})
  */
 static mut ANIMALS: Vec<Box<dyn Speak>> = Vec::new();
 
@@ -67,7 +69,9 @@ unsafe fn describe_animals() -> String {
     let mut result = String::new();
     ANIMALS
         .iter()
-        .for_each(|item| result.push_str(item.speak().as_str()));
+        .for_each(|item| {
+            result.push_str(item.speak().as_str())
+        });
     result
 }
 
