@@ -1,7 +1,7 @@
 mod utils;
 
-use std::mem;
 use serde::{Deserialize, Serialize};
+use std::mem;
 use wasm_bindgen::prelude::*;
 use web_sys::wasm_bindgen::JsCast;
 use web_sys::{Document, FormData, HtmlFormElement, SubmitEvent};
@@ -32,14 +32,6 @@ impl Speak for Dog {
     }
 }
 
-/*
-    https://doc.rust-lang.org/std/keyword.dyn.html
-
-    A dyn Trait reference contains two pointers. One pointer goes to the data (e.g., an instance of a struct).
-    Another pointer goes to a map of method call names to function pointers (known as a virtual method table or vtable).
-
-    Box<dyn T> is essentially equivalent to (*mut {data}, *mut {vtable})
- */
 static mut ANIMALS: Vec<Box<dyn Speak>> = Vec::new();
 
 #[wasm_bindgen]
@@ -66,6 +58,14 @@ fn add_animal(name: &String, age: &String, animal_type: &String) {
     }
 }
 
+/*
+   https://doc.rust-lang.org/std/keyword.dyn.html
+
+   A dyn Trait reference contains two pointers. One pointer goes to the data (e.g., an instance of a struct).
+   Another pointer goes to a map of method call names to function pointers (known as a virtual method table or vtable).
+
+   Box<dyn T> is essentially equivalent to (*mut {data}, *mut {vtable})
+*/
 unsafe fn print_box_internals(item: &Box<dyn Speak>) {
     let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const usize)>(item);
     log(format!("pointer: {}, vtable: {}", pointer as u32, vtable as u32).as_str());
@@ -73,12 +73,10 @@ unsafe fn print_box_internals(item: &Box<dyn Speak>) {
 
 unsafe fn describe_animals() -> String {
     let mut result = String::new();
-    ANIMALS
-        .iter()
-        .for_each(|item| {
-            print_box_internals(item);
-            result.push_str(item.speak().as_str())
-        });
+    ANIMALS.iter().for_each(|item| {
+        print_box_internals(item);
+        result.push_str(item.speak().as_str())
+    });
     result
 }
 
