@@ -2,5 +2,8 @@ build:
     rustup target add wasm32-unknown-unknown
     RUSTFLAGS="-Clink-arg=--export-table" cargo build --release --target wasm32-unknown-unknown
 
+as-wat: build
+    wasm2wat {{ justfile_directory() }}/target/wasm32-unknown-unknown/release/rust_polymorphism.wasm
+
 clean:
     cargo clean
