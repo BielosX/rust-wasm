@@ -66,13 +66,17 @@ fn add_animal(name: &String, age: &String, animal_type: &String) {
     }
 }
 
+unsafe fn print_box_internals(item: &Box<dyn Speak>) {
+    let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const usize)>(item);
+    log(format!("pointer: {}, vtable: {}", pointer as u32, vtable as u32).as_str());
+}
+
 unsafe fn describe_animals() -> String {
     let mut result = String::new();
     ANIMALS
         .iter()
         .for_each(|item| {
-            let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const usize)>(item);
-            log(format!("pointer: {}, vtable: {}", pointer as u32, vtable as u32).as_str());
+            print_box_internals(item);
             result.push_str(item.speak().as_str())
         });
     result
