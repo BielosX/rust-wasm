@@ -2,6 +2,11 @@
 const wasmFile = "target/wasm32-unknown-unknown/release/rust_polymorphism.wasm"
 const wasm = WebAssembly.instantiateStreaming(fetch(wasmFile), {});
 
+wasm.then((obj) => {
+    const tableSize = document.getElementById("wasm-table-size");
+    tableSize.innerText = `WASM Table Size: ${obj.instance.exports.__indirect_function_table.length}`;
+});
+
 function getFiguresAreas() {
     const result = document.getElementById("figure-areas");
     wasm.then((obj) => {
