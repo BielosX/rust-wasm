@@ -1,9 +1,17 @@
 (module
     (import "js" "table" (table 4 funcref))
     (import "js" "memory" (memory 1))
+    (import "js" "onWasmLoad" (func $onWasmLoad (param i32) (param i32)))
     (global $counter (mut i32) (i32.const 0))
     (data (i32.const 2000) "Hello World")
+    (data (i32.const 2011) "WebAssembly initialized")
     (elem (i32.const 0) $add $sub $mul)
+    (start $start)
+    (func $start
+        i32.const 2011 ;; init string address
+        i32.const 23 ;; init string length
+        call $onWasmLoad
+    )
     (func (export "copyStringTo") (param $offset i32)
         local.get $offset
         i32.const 2000 ;; Hello World address

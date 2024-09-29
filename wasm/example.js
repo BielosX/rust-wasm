@@ -10,6 +10,7 @@ importObject = {
     js: {
         memory,
         table,
+        onWasmLoad,
     },
 };
 
@@ -20,6 +21,11 @@ function getTextFromMemory(from, to) {
     const textDecoder = new TextDecoder("utf-8");
     const slice = memory.buffer.slice(from, to);
     return textDecoder.decode(slice);
+}
+
+function onWasmLoad(address, length) {
+    const text = getTextFromMemory(address, address + length);
+    console.log(text);
 }
 
 function addNumbersHandler() {
