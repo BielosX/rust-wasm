@@ -58,6 +58,15 @@ fn add_animal(name: &String, age: &String, animal_type: &String) {
     }
 }
 
+unsafe fn dump_memory(ptr: *const u8, bytes: usize) {
+    let mut result = String::with_capacity(bytes);
+    for idx in 0..bytes {
+        let value = format!("{:02x} ", *ptr.add(idx));
+        result.push_str(value.as_str());
+    }
+    log(result.as_str());
+}
+
 /*
    https://doc.rust-lang.org/std/keyword.dyn.html
 
@@ -69,6 +78,7 @@ fn add_animal(name: &String, age: &String, animal_type: &String) {
 unsafe fn print_box_internals(item: &Box<dyn Speak>) {
     let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const usize)>(item);
     log(format!("pointer: {}, vtable: {}", pointer as u32, vtable as u32).as_str());
+    dump_memory(vtable as *const u8, 16);
 }
 
 unsafe fn describe_animals() -> String {
