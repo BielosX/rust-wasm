@@ -67,6 +67,14 @@ unsafe fn dump_memory(ptr: *const u8, bytes: usize) {
     log(result.as_str());
 }
 
+#[repr(C)]
+struct VTable {
+    destructor: *const (),
+    size: usize,
+    align: usize,
+    methods: *const (),
+}
+
 /*
    https://doc.rust-lang.org/std/keyword.dyn.html
 
@@ -76,9 +84,16 @@ unsafe fn dump_memory(ptr: *const u8, bytes: usize) {
    Box<dyn T> is essentially equivalent to (*mut {data}, *mut {vtable})
 */
 unsafe fn print_box_internals(item: &Box<dyn Speak>) {
-    let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const usize)>(item);
-    log(format!("pointer: {}, vtable: {}", pointer as u32, vtable as u32).as_str());
+    let (pointer, vtable) = mem::transmute_copy::<Box<_>, (*const u8, *const VTable)>(item);
+    log(format!("pointer: {:p}, vtable: {:p}", pointer, vtable).as_str());
     dump_memory(vtable as *const u8, 16);
+    log(format!(
+        "VTable size: {}, align: {}, 'speak' method addr: {:p} (offset in Wasm Table)",
+        (*vtable).size,
+        (*vtable).align,
+        (*vtable).methods
+    )
+    .as_str());
 }
 
 unsafe fn describe_animals() -> String {
